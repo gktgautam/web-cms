@@ -1,0 +1,24 @@
+{
+  "name": "hr-cms",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,magenta \"npm:dev -w @hr/api\" \"npm:dev -w @hr/web\"",
+    "build": "npm run build -w @hr/api && npm run build -w @hr/web",
+    "start": "npm run start -w @hr/api",
+    "db:up": "docker compose up -d db pgadmin",
+    "db:down": "docker compose down",
+    "prisma:deploy": "npm run prisma:deploy -w @hr/api",
+    "prisma:reset": "npm run prisma:reset -w @hr/api",
+    "typecheck": "tsc -b",
+    "lint": "eslint . || true"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "eslint": "^9.11.1",
+    "typescript": "^5.5.4"
+  }
+}
