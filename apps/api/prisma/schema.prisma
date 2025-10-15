@@ -1,18 +1,35 @@
-datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
-generator client { provider = "prisma-client-js" }
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-enum Role { ADMIN RECRUITER HIRING_MANAGER VIEWER }
-enum JobStatus { DRAFT REVIEW PUBLISHED ARCHIVED }
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  RECRUITER
+  HIRING_MANAGER
+  VIEWER
+}
+
+enum JobStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
 
 model User {
-  id        String  @id @default(uuid())
-  email     String  @unique
-  password  String
-  name      String
-  role      Role    @default(VIEWER)
+  id           String      @id @default(uuid())
+  email        String      @unique
+  password     String
+  name         String
+  role         Role        @default(VIEWER)
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
-  createdAt DateTime @default(now())
+  createdAt    DateTime    @default(now())
 }
 
 model Department {
@@ -23,42 +40,42 @@ model Department {
 }
 
 model Job {
-  id           String   @id @default(uuid())
-  title        String
-  slug         String   @unique
-  description  String
-  location     String
+  id             String        @id @default(uuid())
+  title          String
+  slug           String        @unique
+  description    String
+  location       String
   employmentType String
-  status       JobStatus @default(DRAFT)
-  departmentId String
-  department   Department @relation(fields: [departmentId], references: [id])
-  createdById  String
-  createdBy    User      @relation(fields: [createdById], references: [id])
-  publishedAt  DateTime?
-  applications Application[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  status         JobStatus     @default(DRAFT)
+  departmentId   String
+  department     Department    @relation(fields: [departmentId], references: [id])
+  createdById    String
+  createdBy      User          @relation(fields: [createdById], references: [id])
+  publishedAt    DateTime?
+  applications   Application[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model Application {
-  id        String   @id @default(uuid())
-  jobId     String
-  job       Job      @relation(fields: [jobId], references: [id])
-  name      String
-  email     String
-  resumeUrl String?
+  id          String   @id @default(uuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id])
+  name        String
+  email       String
+  resumeUrl   String?
   coverLetter String?
-  stage     String   @default("APPLIED")
-  createdAt DateTime @default(now())
-  notes     Note[]
+  stage       String   @default("APPLIED")
+  createdAt   DateTime @default(now())
+  notes       Note[]
 }
 
 model Note {
-  id            String @id @default(uuid())
+  id            String      @id @default(uuid())
   applicationId String
   application   Application @relation(fields: [applicationId], references: [id])
   authorId      String
-  author        User   @relation(fields: [authorId], references: [id])
+  author        User        @relation(fields: [authorId], references: [id])
   body          String
-  createdAt     DateTime @default(now())
+  createdAt     DateTime    @default(now())
 }
