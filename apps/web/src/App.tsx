@@ -1,25 +1,27 @@
-import { Route, Routes, Link, Navigate, useNavigate } from 'react-router-dom'
-import PublicJobs from './features/public/pages/PublicJobs'
-import JobPublic from './features/public/pages/JobPublic'
-import JobsList from './features/jobs/pages/JobsList'
-import JobNew from './features/jobs/pages/JobNew'
-import LoginPage from './features/auth/pages/LoginPage'
-import RegisterPage from './features/auth/pages/RegisterPage'
-import { ProtectedRoute } from './features/auth/components/ProtectedRoute'
-import { useAuth } from './features/auth/AuthProvider'
+import { Route, Routes, Link, Navigate, useNavigate } from 'react-router-dom';
+import PublicJobs from './features/public/pages/PublicJobs';
+import JobPublic from './features/public/pages/JobPublic';
+import JobsList from './features/jobs/pages/JobsList';
+import JobNew from './features/jobs/pages/JobNew';
+import JobDetail from './features/jobs/pages/JobDetail';
+import JobEdit from './features/jobs/pages/JobEdit';
+import LoginPage from './features/auth/pages/LoginPage';
+import RegisterPage from './features/auth/pages/RegisterPage';
+import { ProtectedRoute } from './features/auth/components/ProtectedRoute';
+import { useAuth } from './features/auth/AuthProvider';
 
-export default function App(){
-  const navigate = useNavigate()
-  const { isAuthenticated, user, logout } = useAuth()
+export default function App() {
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const handleLogout = () => {
-    logout()
-    navigate('/login', { replace: true })
-  }
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
-    <div style={{fontFamily:'system-ui', padding:16}}>
-      <header style={{display:'flex', gap:12, marginBottom:16}}>
+    <div style={{ fontFamily: 'system-ui', padding: 16 }}>
+      <header style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'center' }}>
         <Link to="/">Public</Link>
         {isAuthenticated ? (
           <>
@@ -35,12 +37,14 @@ export default function App(){
         )}
       </header>
       <Routes>
-        <Route path="/" element={<PublicJobs/>}/>
-        <Route path="/jobs/:slug" element={<JobPublic/>}/>
+        <Route path="/" element={<PublicJobs />} />
+        <Route path="/jobs/:slug" element={<JobPublic />} />
         <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard/jobs" element={<JobsList/>}/>
-          <Route path="/dashboard/jobs/new" element={<JobNew/>}/>
+          <Route path="/dashboard/jobs" element={<JobsList />} />
+          <Route path="/dashboard/jobs/new" element={<JobNew />} />
+          <Route path="/dashboard/jobs/:id" element={<JobDetail />} />
+          <Route path="/dashboard/jobs/:id/edit" element={<JobEdit />} />
         </Route>
         <Route element={<ProtectedRoute roles={['ADMIN']} />}>
           <Route path="/dashboard/users/new" element={<RegisterPage />} />
@@ -48,5 +52,5 @@ export default function App(){
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
-  )
+  );
 }

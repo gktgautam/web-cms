@@ -1,36 +1,38 @@
-import { useState } from 'react'
-import { api } from '../../../lib/api'
-import { useNavigate } from 'react-router-dom'
+import { isAxiosError } from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { JobForm } from '../components/JobForm';
+import { DEFAULT_JOB_FORM, JobFormValues, createJob } from '../api';
 
-export default function JobNew(){
-  const nav = useNavigate()
-  const [form, setForm] = useState({ title:'', description:'', location:'', employmentType:'', departmentId:'' })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string|undefined>()
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault()
-    setLoading(true); setError(undefined)
-    try {
-      await api.post('/jobs', form)
-      nav('/dashboard/jobs')
-    } catch (e: any) {
-      setError(e?.response?.data?.error || 'Failed')
-    } finally {
-      setLoading(false)
-    }
+const getErrorMessage = (error: unknown) => {
+  if (isAxiosError(error)) {
+    return error.response?.data?.error || 'Failed to save job';
   }
+  return 'Failed to save job';
+};
+
+export default function JobNew() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (values: JobFormValues) => createJob(values),
+    onSuccess: (job) => {
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      queryClient.invalidateQueries({ queryKey: ['publicJobs'] });
+      navigate(`/dashboard/jobs/${job.id}`, { replace: true });
+    }
+  });
 
   return (
-    <form onSubmit={onSubmit} style={{maxWidth:600}}>
-      <h1>New Job</h1>
-      {error && <p style={{color:'crimson'}}>{error}</p>}
-      <input placeholder="Title" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} style={{display:'block', width:'100%', margin:'8px 0', padding:8}} />
-      <textarea placeholder="Description" value={form.description} onChange={e=>setForm({...form, description:e.target.value})} style={{display:'block', width:'100%', margin:'8px 0', padding:8, height:160}} />
-      <input placeholder="Location" value={form.location} onChange={e=>setForm({...form, location:e.target.value})} style={{display:'block', width:'100%', margin:'8px 0', padding:8}} />
-      <input placeholder="Employment Type" value={form.employmentType} onChange={e=>setForm({...form, employmentType:e.target.value})} style={{display:'block', width:'100%', margin:'8px 0', padding:8}} />
-      <input placeholder="Department ID" value={form.departmentId} onChange={e=>setForm({...form, departmentId:e.target.value})} style={{display:'block', width:'100%', margin:'8px 0', padding:8}} />
-      <button disabled={loading} style={{padding:'8px 12px'}}>{loading ? 'Saving…' : 'Save draft'}</button>
-    </form>
-  )
+    <div>
+      <JobForm
+        initialValues={DEFAULT_JOB_FORM}
+        onSubmit={(values) => mutation.mutate(values)}
+        submitting={mutation.isPending}
+        error={mutation.isError ? getErrorMessage(mutation.error) : null}
+        submitLabel="Create job"
+      />
+    </div>
+  );
 }
