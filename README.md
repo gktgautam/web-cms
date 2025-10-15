@@ -15,8 +15,8 @@ npm run prisma:deploy
 npm run dev
 ```
 - Web: http://localhost:5173
-- API: http://localhost:4000
-- PgAdmin: http://localhost:5050
+- API: http://localhost:4000/api
+- pgAdmin: http://localhost:5050
 
 ## Production-ish
 ```bash

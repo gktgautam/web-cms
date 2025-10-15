@@ -12,8 +12,8 @@ export default function JobNew(){
     e.preventDefault()
     setLoading(true); setError(undefined)
     try {
-      const res = await api.post('/jobs', form)
-      nav(`/jobs/${res.data.slug}`)
+      await api.post('/jobs', form)
+      nav('/dashboard/jobs')
     } catch (e: any) {
       setError(e?.response?.data?.error || 'Failed')
     } finally {
