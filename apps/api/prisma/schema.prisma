@@ -30,6 +30,10 @@ model User {
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id])
   createdAt    DateTime    @default(now())
+
+  // relations
+  createdJobs Job[]  @relation("UserCreatedJobs")
+  notes       Note[] @relation("UserNotes")
 }
 
 model Department {
@@ -50,7 +54,7 @@ model Job {
   departmentId   String
   department     Department    @relation(fields: [departmentId], references: [id])
   createdById    String
-  createdBy      User          @relation(fields: [createdById], references: [id])
+  createdBy      User          @relation("UserCreatedJobs", fields: [createdById], references: [id])
   publishedAt    DateTime?
   applications   Application[]
   createdAt      DateTime      @default(now())
@@ -75,7 +79,7 @@ model Note {
   applicationId String
   application   Application @relation(fields: [applicationId], references: [id])
   authorId      String
-  author        User        @relation(fields: [authorId], references: [id])
+  author        User        @relation("UserNotes", fields: [authorId], references: [id])
   body          String
   createdAt     DateTime    @default(now())
 }
