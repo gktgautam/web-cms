@@ -1,11 +1,9 @@
 import { api } from '../../lib/api';
+import type { Department } from '../departments/api';
 
 export type JobStatus = 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED';
 
-export interface Department {
-  id: string;
-  name: string;
-}
+export type { Department } from '../departments/api';
 
 export interface Job {
   id: string;
@@ -98,11 +96,6 @@ export const restoreJob = async (id: string) => {
   return response.data;
 };
 
-export const getDepartments = async () => {
-  const response = await api.get<Department[]>('/departments');
-  return response.data;
-};
-
 export const DEFAULT_JOB_FORM: JobFormValues = {
   title: '',
   description: '',
@@ -110,3 +103,5 @@ export const DEFAULT_JOB_FORM: JobFormValues = {
   employmentType: '',
   departmentId: ''
 };
+
+export { listDepartments as getDepartments } from '../departments/api';

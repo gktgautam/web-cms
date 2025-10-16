@@ -9,6 +9,7 @@ import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import { ProtectedRoute } from './features/auth/components/ProtectedRoute';
 import { useAuth } from './features/auth/AuthProvider';
+import DepartmentsPage from './features/departments/pages/DepartmentsPage';
 
 import './styles/tailwind.css';
 
@@ -41,7 +42,12 @@ export default function App() {
           {isAuthenticated ? (
             <>
               <Link to="/dashboard/jobs">Dashboard</Link> 
-              {user?.role === 'ADMIN' && <Link to="/dashboard/users/new">Invite user</Link>}
+              {user?.role === 'ADMIN' && (
+                <>
+                  <Link to="/dashboard/departments">Departments</Link>
+                  <Link to="/dashboard/users/new">Invite user</Link>
+                </>
+              )}
               <button type="button" onClick={handleLogout} className="btn btn-primary-animated">
                 Sign out
               </button>
@@ -68,6 +74,7 @@ export default function App() {
           <Route path="/dashboard/jobs/:id/edit" element={<JobEdit />} />
         </Route>
         <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+          <Route path="/dashboard/departments" element={<DepartmentsPage />} />
           <Route path="/dashboard/users/new" element={<RegisterPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
