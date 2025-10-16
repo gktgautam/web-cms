@@ -36,7 +36,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 360, margin: '0 auto' }}>
+    <div className='flex items-center justify-center'>
+    <div className='p-10 bg-gray-100'>
       <h1>Sign in</h1>
       {error && <p style={{ color: 'crimson' }}>{error}</p>}
       <form onSubmit={onSubmit} style={{ display: 'grid', gap: 12 }}>
@@ -64,6 +65,7 @@ export default function LoginPage() {
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
+    </div>
     </div>
   )
 }
