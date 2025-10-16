@@ -10,6 +10,9 @@
       "node"
     ],
     "paths": {
+      "@/*": [
+        "apps/web/src/*"
+      ],
       "@api/*": [
         "apps/api/src/*"
       ],
