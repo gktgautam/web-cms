@@ -27,6 +27,27 @@ Run everything from the **root**.
 - Web: http://localhost:5173
 - API: http://localhost:4000/api
 
+### Adding a department
+
+Administrators can add departments from the web dashboard. Sign in with an
+`ADMIN` account, open **Dashboard → Departments**, enter the department name,
+and submit the form. The list updates automatically once the department is
+created.
+
+You can also create departments programmatically via the API. Sign in with an
+`ADMIN` account, then send an authenticated POST request to
+`/api/departments` with the new department name:
+
+```bash
+curl -X POST http://localhost:4000/api/departments \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-admin-access-token>" \
+  -d '{"name": "Marketing"}'
+```
+
+The endpoint returns the newly created department record. The department
+will then be available for job postings and during user registration.
+
 ## Production-ish
 ```bash
 npm run build
