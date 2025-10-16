@@ -9,6 +9,8 @@
     "dev": "concurrently -n api,web -c blue,magenta \"npm:dev -w @hr/api\" \"npm:dev -w @hr/web\"",
     "build": "npm run build -w @hr/api && npm run build -w @hr/web",
     "start": "npm run start -w @hr/api",
+    "prisma:generate": "npm run prisma:generate -w @hr/api",
+    "prisma:migrate": "npm run prisma:migrate -w @hr/api",
     "prisma:deploy": "npm run prisma:deploy -w @hr/api",
     "prisma:reset": "npm run prisma:reset -w @hr/api",
     "typecheck": "tsc -b",
