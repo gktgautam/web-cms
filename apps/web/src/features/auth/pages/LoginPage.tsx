@@ -36,32 +36,23 @@ export default function LoginPage() {
   }
 
   return (
-    <div className='flex items-center justify-center'>
-    <div className='p-10 bg-gray-100'>
-      <h1>Sign in</h1>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
-      <form onSubmit={onSubmit} style={{ display: 'grid', gap: 12 }}>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Email</span>
-          <input
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            required
-            style={{ padding: 8 }}
-          />
-        </label>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Password</span>
-          <input
-            type="password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
-            style={{ padding: 8 }}
-          />
-        </label>
-        <button type="submit" disabled={loading} style={{ padding: '8px 12px' }}>
+    <div className='flex items-center justify-center h-full flex-grow'>
+    <div className='p-10 bg-gray-100 min-w-[400px]'>
+      <h1 className='text-2xl font-bold'>Sign in</h1>
+      {error && <p className='text-red-500'>{error}</p>}
+
+      <form onSubmit={onSubmit} className='grid gap-3 mt-5'>
+         <div>
+            <label className='field-label'>Email</label> 
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required className='input' />
+         </div>
+
+        <div>
+          <label className='field-label'>Password</label>
+          <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required className='input' />
+        </div>
+       
+        <button type="submit" disabled={loading} className='btn btn-primary-animated mt-3'>
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
       </form>

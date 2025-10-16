@@ -53,83 +53,53 @@ export default function DepartmentsPage() {
         createError.response?.data?.message ||
         createError.response?.data?.name?.[0];
       if (message) {
-        return <p style={{ color: 'crimson', margin: 0 }}>{message}</p>;
+        return <p className='text-red-500'>{message}</p>;
       }
     }
 
-    return <p style={{ color: 'crimson', margin: 0 }}>Unable to create department. Please try again.</p>;
+    return <p className='text-red-500'>Unable to create department. Please try again.</p>;
   };
 
   return (
-    <div style={{ display: 'grid', gap: 24, maxWidth: 720 }}>
-      <header style={{ display: 'grid', gap: 4 }}>
-        <h1 style={{ margin: 0 }}>Departments</h1>
-        <p style={{ margin: 0, color: '#4b5563' }}>
-          Create new departments to keep your job postings organised. Departments are also available when inviting new users.
-        </p>
-      </header>
+    <div className='p-10'>
+      
+       <h1  className='text-2xl font-bold'>Departments</h1>
+        <p className='text-gray-600'>Create new departments to keep your job postings organised. Departments are also available when inviting new users.</p>
 
-      <section style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: 20, display: 'grid', gap: 16 }}>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
-          <label style={{ display: 'grid', gap: 6 }}>
-            <span style={{ fontWeight: 600 }}>Department name</span>
-            <input
-              type="text"
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-                if (formError) {
-                  setFormError(null);
-                }
-              }}
-              disabled={isPending}
-              placeholder="e.g. Marketing"
-              style={{ padding: 10, borderRadius: 8, border: '1px solid #d1d5db' }}
-            />
-          </label>
+      <section className='mt-10 border border-gray-300 rounded-lg p-5 grid gap-4  bg-gray-100'>
+        <form onSubmit={handleSubmit} className='grid gap-4 mt-5'>
 
-          {formError && <p style={{ color: 'crimson', margin: 0 }}>{formError}</p>}
+          <div className='flex items-end gap-5'>
+            <div className='w-full'>
+              <label className='field-label'>Department name</label>
+              <input type="text" value={name} onChange={(event) => { setName(event.target.value); if (formError) { setFormError(null); } }} disabled={isPending} placeholder="e.g. Marketing" className='input' />
+            </div>
+
+            <button type="submit" disabled={isPending} className='btn btn-primary-animated min-w-[220px]'>
+             {isPending ? 'Saving…' : 'Create department'}
+            </button> 
+          </div> 
+
+          {formError && <p className='text-red-500'>{formError}</p>}
           {renderCreateError()}
 
-          <button
-            type="submit"
-            disabled={isPending}
-            style={{
-              padding: '10px 16px',
-              borderRadius: 8,
-              border: 'none',
-              background: isPending ? '#9ca3af' : '#2563eb',
-              color: '#fff',
-              cursor: isPending ? 'not-allowed' : 'pointer',
-              fontWeight: 600
-            }}
-          >
-            {isPending ? 'Saving…' : 'Create department'}
-          </button>
+           
         </form>
       </section>
 
-      <section style={{ display: 'grid', gap: 12 }}>
-        <h2 style={{ margin: 0 }}>Existing departments</h2>
+     <section className='mt-10 gap-4'>
+        <h2 className='text-lg mb-2'>Existing departments</h2>
 
         {isLoading && <p>Loading departments…</p>}
-        {hasListError && <p style={{ color: 'crimson', margin: 0 }}>Unable to load departments.</p>}
+        {hasListError && <p className='text-red-500'>Unable to load departments.</p>}
 
         {!isLoading && !hasListError && departments.length === 0 && (
-          <p style={{ margin: 0, color: '#6b7280' }}>No departments yet. Create the first one above.</p>
+          <p className='text-gray-500'>No departments yet. Create the first one above.</p>
         )}
 
-        <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 8 }}>
+        <ul className='list-none m-0 p-0 grid gap-2'>
           {departments.map((dept) => (
-            <li
-              key={dept.id}
-              style={{
-                border: '1px solid #e5e7eb',
-                borderRadius: 10,
-                padding: '12px 16px',
-                background: '#f9fafb'
-              }}
-            >
+            <li key={dept.id} className='border border-gray-300 rounded-lg p-3 bg-gray-50'>
               {dept.name}
             </li>
           ))}

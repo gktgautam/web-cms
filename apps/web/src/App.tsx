@@ -23,45 +23,46 @@ export default function App() {
   };
 
   return (
-    <>
+    <div className='page_body flex flex-col relative min-h-screen'>
 
- <header className="w-full flex flex-col bg-white shadow-sm z-50 relative bg-opacity-100 px-5">
-   <div className="lg:my-0 my-auto ">
-      <div className="main-wrapper w-full flex gap-6">
-         <div className="lg:max-w-[200px] w-full mb-3 mt-2">
-          <a href="https://www.equentis.com" target="_blank" rel="noopener noreferrer"> 
-            <img alt="Logo" className="w-auto min-w-[110px] h-[40px]" src="https://www.equentis.com/assets/Home_Page/equentis_logo.svg" />
-         </a>
-         </div>
-         
-         <div className="flex ml-auto space-x-6 items-center">
-          
-          <Link to="/">Public</Link>
-          
-          
-          {isAuthenticated ? (
-            <>
-              <Link to="/dashboard/jobs">Dashboard</Link> 
-              {user?.role === 'ADMIN' && (
+    <header className="w-full flex flex-col bg-white shadow-sm z-50 relative bg-opacity-100 px-5">
+      <div className="lg:my-0 my-auto ">
+          <div className="main-wrapper w-full flex gap-6">
+            <div className="lg:max-w-[200px] w-full mb-3 mt-2">
+              <a href="https://www.equentis.com" target="_blank" rel="noopener noreferrer"> 
+                <img alt="Logo" className="w-auto min-w-[110px] h-[40px]" src="https://www.equentis.com/assets/Home_Page/equentis_logo.svg" />
+            </a>
+            </div>
+            
+            <div className="flex ml-auto space-x-6 items-center">
+              
+              <Link to="/">Public</Link>
+              
+              
+              {isAuthenticated ? (
                 <>
-                  <Link to="/dashboard/departments">Departments</Link>
-                  <Link to="/dashboard/users/new">Invite user</Link>
+                  <Link to="/dashboard/jobs">Dashboard</Link> 
+                  {user?.role === 'ADMIN' && (
+                      <>
+                        <Link to="/dashboard/departments">Departments</Link>
+                        <Link to="/dashboard/users/new">Invite user</Link>
+                      </>
+                    )}
+                  <button type="button" onClick={handleLogout} className="btn btn-primary-animated">
+                    Sign out
+                  </button>
                 </>
+              ) : (
+                <Link to="/login" className="btn btn-primary-animated">Sign in</Link>
               )}
-              <button type="button" onClick={handleLogout} className="btn btn-primary-animated">
-                Sign out
-              </button>
-            </>
-          ) : (
-            <Link to="/login" className="btn btn-primary-animated">Sign in</Link>
-          )}
-        </div>
+            </div>
+          </div>
       </div>
-   </div>
-</header>
+    </header>
 
 
-
+    
+    <div className='relative overflow-scrollable h-[calc(100vh-80px)] flex-grow'>
     
       <Routes>
         <Route path="/" element={<PublicJobs />} />
@@ -79,6 +80,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
+      </div>
+    </div>
   );
 }

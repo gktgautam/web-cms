@@ -37,13 +37,13 @@ export default function JobsList() {
   const jobs = data?.items ?? [];
 
   return (
-    <div style={{ display: 'grid', gap: 16 }}>
-      <header style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-        <h1 style={{ margin: 0 }}>Jobs</h1>
+    <div className='grid gap-4 p-10'>
+      <div className='flex flex-wrap gap-3 items-center'>
+        <h1 className='m-0'>Jobs</h1>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as JobStatus | '')}
-          style={{ padding: '6px 10px', borderRadius: 6, border: '1px solid #d1d5db' }}
+          className='p-1 border border-gray-300 rounded'
         >
           {statusOptions.map((option) => (
             <option key={option.value || 'all'} value={option.value}>
@@ -55,57 +55,46 @@ export default function JobsList() {
           type="button"
           onClick={() => refetch()}
           disabled={isFetching}
-          style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff' }}
+          className='p-1 border border-gray-300 rounded bg-white'
         >
           Refresh
         </button>
         <Link
           to="/dashboard/jobs/new"
-          style={{ marginLeft: 'auto', padding: '8px 12px', borderRadius: 6, background: '#2563eb', color: '#fff' }}
+          className='ml-auto p-2 rounded bg-blue-600 text-white'
         >
           + New job
         </Link>
-      </header>
+      </div>
 
       {isLoading && <p>Loading…</p>}
-      {error && <p style={{ color: 'crimson' }}>{getErrorMessage(error)}</p>}
+      {error && <p className='text-red-500'>{getErrorMessage(error)}</p>}
 
       {!isLoading && jobs.length === 0 && <p>No jobs found.</p>}
 
-      <div style={{ display: 'grid', gap: 12 }}>
+      <div className='grid gap-3'>
         {jobs.map((job: Job) => (
           <article
             key={job.id}
-            style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: 16, display: 'grid', gap: 8 }}
+            className='border border-gray-300 rounded-lg p-4'
           >
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-              <h2 style={{ margin: 0, flex: '1 1 auto' }}>{job.title}</h2>
-              <span
-                style={{
-                  padding: '4px 8px',
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontWeight: 600,
-                  background: statusStyles[job.status].background,
-                  color: statusStyles[job.status].color
-                }}
-              >
+            <div className='flex flex-wrap gap-2 items-center'>
+              <h2 className='m-0 flex-1'>{job.title}</h2>
+              <span className='px-2 py-1 rounded-full text-sm font-medium' style={statusStyles[job.status]}>
                 {job.status}
               </span>
             </div>
-            <div style={{ color: '#4b5563' }}>
-              {job.department?.name} · {job.location} · {job.employmentType}
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-              <Link to={`/dashboard/jobs/${job.id}`} style={{ color: '#2563eb' }}>
+            <div className='text-gray-600'>{job.department?.name} · {job.location} · {job.employmentType}</div>
+            <div className='flex flex-wrap gap-3'>
+              <Link to={`/dashboard/jobs/${job.id}`} className='text-blue-600'>
                 Manage
               </Link>
               {job.status === 'PUBLISHED' ? (
-                <Link to={`/jobs/${job.slug}`} target="_blank" rel="noreferrer" style={{ color: '#2563eb' }}>
+                <Link to={`/jobs/${job.slug}`} target="_blank" rel="noreferrer" className='text-blue-600'>
                   Public page
                 </Link>
               ) : (
-                <span style={{ color: '#9ca3af' }}>Not public</span>
+                <span className='text-gray-400'>Not public</span>
               )}
             </div>
           </article>

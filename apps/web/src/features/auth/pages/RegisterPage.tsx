@@ -61,60 +61,45 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ maxWidth: 480 }}>
-      <h1>Create a user</h1>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      <form onSubmit={onSubmit} style={{ display: 'grid', gap: 12 }}>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Name</span>
-          <input
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            required
-            style={{ padding: 8 }}
-          />
-        </label>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Email</span>
-          <input
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            required
-            style={{ padding: 8 }}
-          />
-        </label>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Password</span>
-          <input
-            type="password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
-            style={{ padding: 8 }}
-          />
-        </label>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Role</span>
-          <select
-            value={form.role}
-            onChange={(e) => setForm({ ...form, role: e.target.value as RegisterFormState['role'] })}
-            style={{ padding: 8 }}
-          >
+    <div className='flex items-center justify-center h-full flex-grow'>
+      <div className='p-10 bg-gray-100 min-w-[400px]'>
+      <h1 className='text-2xl font-bold'>Create a user</h1>
+      {error && <p className='text-red-500'>{error}</p>}
+      {success && <p className='text-green-500'>{success}</p>}
+
+      <form onSubmit={onSubmit} className='grid gap-3 mt-5'>
+         <div>
+           <label className='field-label'>Name</label>
+           <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className='input' />
+        </div>
+
+        <div>
+          <label className='field-label'>Email</label>
+          <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} type="email" required className='input' />
+        </div>
+
+        <div>
+          <label className='field-label'>Password</label>
+          <input value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} type="password" required className='input' />
+        </div>
+
+        <div>
+          <label className='field-label'>Role</label>
+          <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as RegisterFormState['role'] })} className='input'>
             {roles.map((role) => (
               <option key={role} value={role}>
                 {role.replace('_', ' ')}
               </option>
             ))}
-          </select>
-        </label>
-        <label style={{ display: 'grid', gap: 4 }}>
-          <span>Department</span>
+          </select> 
+        </div>
+
+        <div>
+          <label className='field-label'>Department</label>
           <select
             value={form.departmentId}
             onChange={(e) => setForm({ ...form, departmentId: e.target.value })}
-            style={{ padding: 8 }}
+            className='input'
             disabled={departmentsLoading}
           >
             <option value="">Unassigned</option>
@@ -124,12 +109,15 @@ export default function RegisterPage() {
               </option>
             ))}
           </select>
-          {departmentsError && <span style={{ color: 'crimson' }}>Unable to load departments.</span>}
-        </label>
-        <button type="submit" disabled={loading} style={{ padding: '8px 12px' }}>
+          {departmentsError && <p className='text-red-500'>Unable to load departments.</p>}
+        </div>
+         
+     
+        <button type="submit" disabled={loading} className='btn btn-primary-animated mt-3'>
           {loading ? 'Creating…' : 'Create user'}
         </button>
       </form>
     </div>
+   </div>
   )
 }
