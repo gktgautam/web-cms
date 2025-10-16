@@ -1,0 +1,220 @@
+@import "tailwindcss";
+
+/* =========================
+   THEME TOKENS
+   ========================= */
+@theme {
+  /* Brand palette */
+  --color-brand: #001e5a;
+  --color-brand-light: #153b7c;
+  --color-brand-dark: #00143d;
+
+  /* Accent palette */
+  --color-accent: #c3966e;
+  --color-accent-light: #d7ae87;
+  --color-accent-dark: #9a7454;
+
+  /* Surfaces & text */
+  --color-bg: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text: #111827;
+}
+
+/* Optional global base look (use classes if you prefer) */
+/* body { background: var(--color-bg); color: var(--color-text); } */
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 cursor-pointer
+         rounded-lg text-sm
+         px-4 py-2 transition-[background,opacity,transform,color,border-color]
+         focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60
+         disabled:opacity-50 disabled:pointer-events-none
+         active:scale-[0.98];
+}
+
+/* Brand primary (navy) */
+@utility btn-primary {
+  @apply btn bg-brand text-white hover:bg-brand-light;
+}
+ 
+/* Accent (gold) */
+@utility btn-accent {
+  @apply btn bg-accent text-white hover:bg-accent-dark;
+}
+
+/* Outline in brand */
+@utility btn-outline {
+  @apply btn border border-brand text-brand hover:bg-brand hover:text-white;
+}
+
+/* Ghost in brand */
+@utility btn-ghost {
+  @apply btn text-brand hover:bg-brand/10;
+}
+
+/* Sizes */
+@utility btn-sm { @apply px-3 py-1.5 text-xs rounded-md; }
+@utility btn-lg { @apply px-5 py-2.5 text-base rounded-xl; }
+@utility icon-btn { @apply inline-flex items-center justify-center rounded-lg p-2 hover:bg-black/5; }
+
+/* Dark mode tweaks */
+@variant dark {
+  .btn-outline { @apply border-brand text-brand hover:bg-brand hover:text-white; }
+  .btn-ghost   { @apply text-accent hover:bg-white/5; }
+}
+
+/* =========================
+   Animated gradient button
+   ========================= */
+
+/* Keyframes */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* primary */
+@utility btn-primary-animated {
+  @apply btn text-white;
+
+  background-image: linear-gradient(
+    110deg,
+    var(--color-brand) 45%,
+    #4d85f1 50%,
+    var(--color-brand-dark) 55%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Accent */
+@utility btn-accent-animated {
+  @apply btn text-white;
+
+  background-image: linear-gradient(
+    110deg,
+    var(--color-accent) 45%,
+    var(--color-accent-light) 50%,
+    var(--color-accent-dark) 55%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+
+
+
+/* =========================
+   FORM CONTROLS
+   ========================= */
+@utility input {
+  @apply block w-full rounded-lg border border-gray-300 bg-white
+         px-3 py-2 text-sm text-gray-900
+         placeholder:text-gray-400
+         focus:outline-none focus:ring-2 focus:ring-accent/60 focus:border-accent;
+}
+@utility textarea { @apply input min-h-[140px]; }
+@utility select   { @apply input pr-8 appearance-none bg-[right_0.6rem_center] bg-no-repeat; }
+
+@utility field-label { @apply block text-sm font-medium text-gray-700 mb-1; }
+
+@utility input-invalid { @apply border-rose-400 focus:ring-rose-400/60 focus:border-rose-400; }
+@utility input-success { @apply border-emerald-400 focus:ring-emerald-400/60 focus:border-emerald-400; }
+
+@utility form-row { @apply grid gap-4 sm:grid-cols-2; }
+@utility form-col { @apply space-y-1.5; }
+
+@variant dark {
+  .input        { @apply border-gray-700 bg-gray-900 text-gray-100 placeholder:text-gray-500; }
+  .field-label  { @apply text-gray-300; }
+}
+
+
+/* =========================
+   CARDS
+   ========================= */
+@utility card         { @apply rounded-xl border border-gray-200 bg-white shadow-sm; }
+@utility card-header  { @apply px-5 py-4 border-b border-gray-100 flex items-center justify-between; }
+@utility card-title   { @apply text-base font-semibold; }
+@utility card-subtitle{ @apply text-sm text-gray-500; }
+@utility card-content { @apply p-5; }
+@utility card-footer  { @apply px-5 py-4 border-t border-gray-100; }
+
+@variant dark {
+  .card         { @apply border-gray-800 bg-gray-900; }
+  .card-header,
+  .card-footer  { @apply border-gray-800; }
+  .card-subtitle{ @apply text-gray-400; }
+}
+
+
+/* =========================
+   BADGES
+   ========================= */
+@utility badge {
+  @apply inline-flex items-center gap-1 rounded-full text-xs font-medium
+         px-2.5 py-1 border border-transparent;
+}
+@utility badge-brand  { @apply badge bg-brand/10 text-brand; }
+@utility badge-accent { @apply badge bg-accent/10 text-accent-dark; }
+@utility badge-gray   { @apply badge bg-gray-100 text-gray-800; }
+
+@variant dark {
+  .badge-brand  { @apply bg-brand/20 text-white; }
+  .badge-accent { @apply bg-accent/20 text-accent-light; }
+  .badge-gray   { @apply bg-gray-800 text-gray-200; }
+}
+
+
+/* =========================
+   ALERTS
+   ========================= */
+@utility alert {
+  @apply w-full rounded-lg border p-4 text-sm;
+}
+@utility alert-info    { @apply alert border-brand/30  bg-brand/10   text-brand; }
+@utility alert-accent  { @apply alert border-accent/30 bg-accent/10  text-accent-dark; }
+@utility alert-success { @apply alert border-emerald-200 bg-emerald-50 text-emerald-800; }
+@utility alert-warning { @apply alert border-amber-200  bg-amber-50   text-amber-800; }
+@utility alert-danger  { @apply alert border-rose-200   bg-rose-50    text-rose-800; }
+
+@variant dark {
+  .alert-info    { @apply border-brand/50  bg-brand/25   text-white; }
+  .alert-accent  { @apply border-accent/50 bg-accent/20  text-accent-light; }
+  .alert-success { @apply border-emerald-800 bg-emerald-950/40 text-emerald-100; }
+  .alert-warning { @apply border-amber-800   bg-amber-950/40   text-amber-100; }
+  .alert-danger  { @apply border-rose-800    bg-rose-950/40    text-rose-100; }
+}
+
+
+/* =========================
+   TABLE
+   ========================= */
+@utility table-wrap { @apply overflow-x-auto w-full; }
+@utility table      { @apply w-full border-collapse text-sm; }
+@utility th         { @apply text-left font-semibold border-b border-gray-200 px-4 py-2; }
+@utility td         { @apply border-b border-gray-100 px-4 py-2; }
+
+@variant dark {
+  .th { @apply border-gray-800; }
+  .td { @apply border-gray-900; }
+}
+
+
+/* =========================
+   LAYOUT HELPERS
+   ========================= */
+@utility page    { @apply container mx-auto px-4 py-6; }
+@utility toolbar { @apply flex items-center gap-3; }
+@utility spacer  { @apply grow; }
+@utility divider { @apply h-px w-full bg-gray-200; }
+@utility muted   { @apply text-gray-500; }
+
+@variant dark {
+  .divider { @apply bg-gray-800; }
+  .muted   { @apply text-gray-400; }
+}
