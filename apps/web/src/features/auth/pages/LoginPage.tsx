@@ -1,70 +1,85 @@
-import { FormEvent, useEffect, useState } from 'react'
-import { useLocation, useNavigate, type Location } from 'react-router-dom'
-import { useAuth } from '../AuthProvider'
+import { FormEvent, useEffect, useState } from 'react';
+import { useLocation, useNavigate, type Location } from 'react-router-dom';
+import { PageContainer } from '../../../components/PageContainer';
+import { useAuth } from '../AuthProvider';
 
 type LocationState = {
-  from?: Location
-}
+  from?: Location;
+};
 
 export default function LoginPage() {
-  const { login, isAuthenticated } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const state = location.state as LocationState | undefined
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState | undefined;
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (isAuthenticated) {
-    return <NavigateAfterLogin />
+    return <NavigateAfterLogin />;
   }
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      await login(form)
-      const next = state?.from?.pathname || '/dashboard/jobs'
-      navigate(next, { replace: true })
+      await login(form);
+      const next = state?.from?.pathname || '/dashboard/jobs';
+      navigate(next, { replace: true });
     } catch (err: any) {
-      const message = err?.response?.data?.error || 'Unable to sign in'
-      setError(message)
+      const message = err?.response?.data?.error || 'Unable to sign in';
+      setError(message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className='flex items-center justify-center h-full flex-grow'>
-    <div className='p-10 bg-gray-100 min-w-[400px]'>
-      <h1 className='text-2xl font-bold'>Sign in</h1>
-      {error && <p className='text-red-500'>{error}</p>}
+    <PageContainer className="flex min-h-[60vh] items-center justify-center">
+      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <h1 className="text-2xl font-bold text-slate-900">Sign in</h1>
+        <p className="mt-1 text-sm text-slate-600">Use your admin or recruiter credentials to access the dashboard.</p>
 
-      <form onSubmit={onSubmit} className='grid gap-3 mt-5'>
-         <div>
-            <label className='field-label'>Email</label> 
-            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required className='input' />
-         </div>
+        {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
-        <div>
-          <label className='field-label'>Password</label>
-          <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required className='input' />
-        </div>
-       
-        <button type="submit" disabled={loading} className='btn btn-primary-animated mt-3'>
-          {loading ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
-    </div>
-    </div>
-  )
+        <form onSubmit={onSubmit} className="mt-6 grid gap-4">
+          <div className="grid gap-2">
+            <label className="field-label">Email</label>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+              className="input"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <label className="field-label">Password</label>
+            <input
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
+              className="input"
+            />
+          </div>
+
+          <button type="submit" disabled={loading} className="btn btn-primary-animated mt-2">
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+      </div>
+    </PageContainer>
+  );
 }
 
 function NavigateAfterLogin() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
-    navigate('/dashboard/jobs', { replace: true })
-  }, [navigate])
-  return null
+    navigate('/dashboard/jobs', { replace: true });
+  }, [navigate]);
+  return null;
 }

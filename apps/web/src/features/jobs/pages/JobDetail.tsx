@@ -84,15 +84,15 @@ export default function JobDetail() {
   const restoreMutation = useJobAction(id, restoreJob, handleActionSuccess, handleActionError);
 
   if (!id) {
-    return <p>Missing job id</p>;
+    return <p className="text-sm text-red-500">Missing job id</p>;
   }
 
   if (jobQuery.isLoading) {
-    return <p>Loading…</p>;
+    return <p className="text-slate-600">Loading…</p>;
   }
 
   if (jobQuery.isError || !jobQuery.data) {
-    return <p>Job not found.</p>;
+    return <p className="text-red-500">Job not found.</p>;
   }
 
   const job = jobQuery.data;
@@ -106,36 +106,28 @@ export default function JobDetail() {
     restoreMutation.isPending;
 
   return (
-    <div style={{ display: 'grid', gap: 16 }}>
-      <header style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: '0 0 4px' }}>{job.title}</h1>
-          <span style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: '#eef2ff',
-            color: '#3730a3',
-            padding: '4px 8px',
-            borderRadius: 999
-          }}>
+    <div className="grid gap-10">
+      <header className="flex flex-wrap items-center gap-4">
+        <div className="space-y-3">
+          <h1 className="text-3xl font-bold text-slate-900">{job.title}</h1>
+          <span className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-sm font-semibold text-indigo-700">
             Status: {job.status}
           </span>
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+        <div className="ml-auto flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={() => navigate(`/dashboard/jobs/${job.id}/edit`)}
-            style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #cbd5f5', background: '#fff' }}
+            className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
           >
             Edit
           </button>
           {publicLink && (
             <Link
               to={publicLink}
-              style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #2563eb', color: '#2563eb' }}
               target="_blank"
               rel="noreferrer"
+              className="rounded-full border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
             >
               View public page
             </Link>
@@ -143,49 +135,49 @@ export default function JobDetail() {
         </div>
       </header>
 
-      <section style={{ display: 'grid', gap: 8 }}>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Department:</strong> {job.department?.name}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Location:</strong> {job.location}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Employment type:</strong> {job.employmentType}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Slug:</strong> {job.slug}
-        </div>
+      <section className="grid gap-3 text-sm text-slate-600">
+        <p>
+          <span className="font-semibold text-slate-900">Department:</span> {job.department?.name || 'Unassigned'}
+        </p>
+        <p>
+          <span className="font-semibold text-slate-900">Location:</span> {job.location}
+        </p>
+        <p>
+          <span className="font-semibold text-slate-900">Employment type:</span> {job.employmentType}
+        </p>
+        <p>
+          <span className="font-semibold text-slate-900">Slug:</span> {job.slug}
+        </p>
         {job.publishedAt && (
-          <div style={{ color: '#4b5563' }}>
-            <strong>Published:</strong> {formatDate(job.publishedAt)}
-          </div>
+          <p>
+            <span className="font-semibold text-slate-900">Published:</span> {formatDate(job.publishedAt)}
+          </p>
         )}
-        <div style={{ color: '#4b5563' }}>
-          <strong>Created:</strong> {formatDate(job.createdAt)}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Updated:</strong> {formatDate(job.updatedAt)}
-        </div>
+        <p>
+          <span className="font-semibold text-slate-900">Created:</span> {formatDate(job.createdAt)}
+        </p>
+        <p>
+          <span className="font-semibold text-slate-900">Updated:</span> {formatDate(job.updatedAt)}
+        </p>
       </section>
 
       <section>
-        <h2 style={{ marginBottom: 8 }}>Description</h2>
-        <pre style={{ whiteSpace: 'pre-wrap', background: '#f9fafb', padding: 16, borderRadius: 8, border: '1px solid #e5e7eb' }}>
+        <h2 className="text-xl font-semibold text-slate-900">Description</h2>
+        <div className="mt-3 whitespace-pre-wrap rounded-2xl border border-slate-200 bg-white p-6 text-sm leading-relaxed text-slate-700 shadow-sm">
           {job.description}
-        </pre>
+        </div>
       </section>
 
-      <section style={{ display: 'grid', gap: 8 }}>
-        <h2 style={{ margin: 0 }}>Actions</h2>
-        {actionError && <p style={{ color: 'crimson', margin: 0 }}>{actionError}</p>}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+      <section className="grid gap-4">
+        <h2 className="text-xl font-semibold text-slate-900">Actions</h2>
+        {actionError && <p className="text-sm text-red-500">{actionError}</p>}
+        <div className="flex flex-wrap gap-3">
           {canRequestReview(job.status) && (
             <button
               type="button"
               onClick={() => reviewMutation.mutate()}
               disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #2563eb', background: '#2563eb', color: '#fff' }}
+              className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Submit for review
             </button>
@@ -195,7 +187,7 @@ export default function JobDetail() {
               type="button"
               onClick={() => publishMutation.mutate()}
               disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #059669', background: '#059669', color: '#fff' }}
+              className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Publish
             </button>
@@ -205,7 +197,7 @@ export default function JobDetail() {
               type="button"
               onClick={() => unpublishMutation.mutate()}
               disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #f59e0b', background: '#fef3c7', color: '#b45309' }}
+              className="rounded-full border border-amber-500 px-4 py-2 text-sm font-semibold text-amber-600 transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Unpublish
             </button>
@@ -215,7 +207,7 @@ export default function JobDetail() {
               type="button"
               onClick={() => archiveMutation.mutate()}
               disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #dc2626', background: '#fee2e2', color: '#b91c1c' }}
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Archive
             </button>
@@ -225,9 +217,9 @@ export default function JobDetail() {
               type="button"
               onClick={() => restoreMutation.mutate()}
               disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #2563eb', background: '#fff', color: '#2563eb' }}
+              className="rounded-full border border-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Restore to draft
+              Restore
             </button>
           )}
         </div>
