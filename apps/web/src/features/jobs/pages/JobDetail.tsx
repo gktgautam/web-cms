@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { isAxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import DOMPurify from 'dompurify';
 import {
   archiveJob,
   getJob,
@@ -106,132 +107,134 @@ export default function JobDetail() {
     restoreMutation.isPending;
 
   return (
-    <div style={{ display: 'grid', gap: 16 }}>
-      <header style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-        <div>
-          <h1 style={{ margin: '0 0 4px' }}>{job.title}</h1>
-          <span style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: '#eef2ff',
-            color: '#3730a3',
-            padding: '4px 8px',
-            borderRadius: 999
-          }}>
-            Status: {job.status}
-          </span>
-        </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-          <button
-            type="button"
-            onClick={() => navigate(`/dashboard/jobs/${job.id}/edit`)}
-            style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #cbd5f5', background: '#fff' }}
-          >
-            Edit
-          </button>
-          {publicLink && (
-            <Link
-              to={publicLink}
-              style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #2563eb', color: '#2563eb' }}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View public page
-            </Link>
-          )}
-        </div>
-      </header>
-
-      <section style={{ display: 'grid', gap: 8 }}>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Department:</strong> {job.department?.name}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Location:</strong> {job.location}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Employment type:</strong> {job.employmentType}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Slug:</strong> {job.slug}
-        </div>
-        {job.publishedAt && (
-          <div style={{ color: '#4b5563' }}>
-            <strong>Published:</strong> {formatDate(job.publishedAt)}
-          </div>
-        )}
-        <div style={{ color: '#4b5563' }}>
-          <strong>Created:</strong> {formatDate(job.createdAt)}
-        </div>
-        <div style={{ color: '#4b5563' }}>
-          <strong>Updated:</strong> {formatDate(job.updatedAt)}
-        </div>
-      </section>
-
-      <section>
-        <h2 style={{ marginBottom: 8 }}>Description</h2>
-        <pre style={{ whiteSpace: 'pre-wrap', background: '#f9fafb', padding: 16, borderRadius: 8, border: '1px solid #e5e7eb' }}>
-          {job.description}
-        </pre>
-      </section>
-
-      <section style={{ display: 'grid', gap: 8 }}>
-        <h2 style={{ margin: 0 }}>Actions</h2>
-        {actionError && <p style={{ color: 'crimson', margin: 0 }}>{actionError}</p>}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {canRequestReview(job.status) && (
-            <button
-              type="button"
-              onClick={() => reviewMutation.mutate()}
-              disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #2563eb', background: '#2563eb', color: '#fff' }}
-            >
-              Submit for review
-            </button>
-          )}
-          {canPublish(job.status) && (
-            <button
-              type="button"
-              onClick={() => publishMutation.mutate()}
-              disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #059669', background: '#059669', color: '#fff' }}
-            >
-              Publish
-            </button>
-          )}
-          {canUnpublish(job.status) && (
-            <button
-              type="button"
-              onClick={() => unpublishMutation.mutate()}
-              disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #f59e0b', background: '#fef3c7', color: '#b45309' }}
-            >
-              Unpublish
-            </button>
-          )}
-          {canArchive(job.status) && (
-            <button
-              type="button"
-              onClick={() => archiveMutation.mutate()}
-              disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #dc2626', background: '#fee2e2', color: '#b91c1c' }}
-            >
-              Archive
-            </button>
-          )}
-          {canRestore(job.status) && (
-            <button
-              type="button"
-              onClick={() => restoreMutation.mutate()}
-              disabled={isActing}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #2563eb', background: '#fff', color: '#2563eb' }}
-            >
-              Restore to draft
-            </button>
-          )}
-        </div>
-      </section>
+<div className="grid gap-4">
+  {/* Header */}
+  <header className="flex flex-wrap items-center gap-3">
+    <div>
+      <h1 className="text-xl font-semibold mb-1">{job.title}</h1>
+      <span className="inline-flex items-center gap-1.5 bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-sm">
+        Status: {job.status}
+      </span>
     </div>
+
+    <div className="ml-auto flex gap-2">
+      <button
+        type="button"
+        onClick={() => navigate(`/dashboard/jobs/${job.id}/edit`)}
+        className="px-3 py-1.5 rounded-md border border-indigo-200 bg-white hover:bg-indigo-50"
+      >
+        Edit
+      </button>
+
+      {publicLink && (
+        <Link
+          to={publicLink}
+          target="_blank"
+          rel="noreferrer"
+          className="px-3 py-1.5 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50"
+        >
+          View public page
+        </Link>
+      )}
+    </div>
+  </header>
+
+  {/* Job details */}
+  <section className="grid gap-2 text-gray-600">
+    <div>
+      <strong>Department:</strong> {job.department?.name}
+    </div>
+    <div>
+      <strong>Location:</strong> {job.location}
+    </div>
+    <div>
+      <strong>Employment type:</strong> {job.employmentType}
+    </div>
+    <div>
+      <strong>Slug:</strong> {job.slug}
+    </div>
+    {job.publishedAt && (
+      <div>
+        <strong>Published:</strong> {formatDate(job.publishedAt)}
+      </div>
+    )}
+    <div>
+      <strong>Created:</strong> {formatDate(job.createdAt)}
+    </div>
+    <div>
+      <strong>Updated:</strong> {formatDate(job.updatedAt)}
+    </div>
+  </section>
+
+  {/* Description */}
+  <section>
+    <h2 className="mb-2 text-lg font-medium">Description</h2>
+     <article className="prose lg:prose-xl" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description) }}></article>
+  </section>
+
+  {/* Actions */}
+  <section className="grid gap-2">
+    <h2 className="m-0 text-lg font-medium">Actions</h2>
+    {actionError && <p className="text-red-600 m-0">{actionError}</p>}
+
+    <div className="flex flex-wrap gap-2">
+      {canRequestReview(job.status) && (
+        <button
+          type="button"
+          onClick={() => reviewMutation.mutate()}
+          disabled={isActing}
+          className="px-3 py-2 rounded-md border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          Submit for review
+        </button>
+      )}
+
+      {canPublish(job.status) && (
+        <button
+          type="button"
+          onClick={() => publishMutation.mutate()}
+          disabled={isActing}
+          className="px-3 py-2 rounded-md border border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+        >
+          Publish
+        </button>
+      )}
+
+      {canUnpublish(job.status) && (
+        <button
+          type="button"
+          onClick={() => unpublishMutation.mutate()}
+          disabled={isActing}
+          className="px-3 py-2 rounded-md border border-amber-500 bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50"
+        >
+          Unpublish
+        </button>
+      )}
+
+      {canArchive(job.status) && (
+        <button
+          type="button"
+          onClick={() => archiveMutation.mutate()}
+          disabled={isActing}
+          className="px-3 py-2 rounded-md border border-red-600 bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50"
+        >
+          Archive
+        </button>
+      )}
+
+      {canRestore(job.status) && (
+        <button
+          type="button"
+          onClick={() => restoreMutation.mutate()}
+          disabled={isActing}
+          className="px-3 py-2 rounded-md border border-blue-600 text-blue-600 bg-white hover:bg-blue-50 disabled:opacity-50"
+        >
+          Restore to draft
+        </button>
+      )}
+    </div>
+  </section>
+</div>
+
   );
 }
