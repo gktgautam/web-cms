@@ -54,3 +54,40 @@ npm run build
 docker compose up -d --build api web
 ```
 Make sure the environment file used by Docker contains a valid `DATABASE_URL` for your external database.
+
+## Jenkins + Docker deployments
+
+The repo ships with Dockerfiles (`docker/api.Dockerfile` and `docker/web.Dockerfile`),
+environment templates, and a Jenkins pipeline that can build, publish, and deploy
+to UAT and production using Docker Compose.
+
+### Directory layout
+
+- `docker/` — multi-stage images for the API and web app.
+- `deploy/uat` and `deploy/prod` — Compose stacks for each environment plus
+  `.env` templates (`stack.env.example` and `api.env.example`).
+- `Jenkinsfile` — declarative pipeline that builds both images, pushes them to a
+  registry, and (optionally) deploys to one or both environments.
+
+Copy each `*.example` file to a secret-managed location (e.g. Jenkins “Secret
+file” credentials) and fill them with environment-specific values. The pipeline
+expects the following credentials to exist:
+
+| ID | Type | Notes |
+| --- | --- | --- |
+| `docker-registry` | Username & password | Used to log in and push/pull images. |
+| `uat-stack-env` / `prod-stack-env` | Secret file | Provide the Compose stack variables (`REGISTRY_HOST`, `REGISTRY_NAMESPACE`, `API_PORT`, `WEB_PORT`, etc.). The pipeline appends the build-specific `IMAGE_TAG`. |
+| `uat-api-env` / `prod-api-env` | Secret file | API runtime environment variables (e.g. `DATABASE_URL`, `JWT_SECRET`). |
+
+Set the registry hostname/namespace and Docker context names at the top of the
+`Jenkinsfile` (defaults are placeholders). When running the job, choose the
+`DEPLOY_TARGET` parameter:
+
+- `none` (default) — build and push images only.
+- `uat` / `prod` — build, push, and deploy the selected environment.
+- `both` — deploy UAT and production sequentially using the same image tag.
+
+Both Compose stacks expose the API on `${API_PORT}` and the web UI on
+`${WEB_PORT}`. The bundled Nginx configuration proxies `/api` requests from the
+web container to the API service, so a single web image works for every
+environment.
